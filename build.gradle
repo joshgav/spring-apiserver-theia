@@ -1,0 +1,66 @@
+#! /usr/bin/env groovy
+
+plugins {
+    id 'maven-publish'
+    id 'java'
+    id 'org.springframework.boot' version "${springBootVersion}"
+}
+
+group 'com.joshgav'
+version '1.0.0-SNAPSHOT'
+
+repositories {
+    maven {
+        url "https://repo.spring.io/milestone"
+    }
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+    annotationProcessor platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+    implementation platform("org.springframework.data:spring-data-bom:${springDataVersion}")
+    implementation platform("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
+    implementation platform("com.fasterxml.jackson:jackson-bom:${jacksonVersion}")
+    implementation platform("org.junit:junit-bom:${junitVersion}")
+
+    implementation platform("org.springframework.cloud:spring-cloud-sleuth-otel-dependencies:${sleuthOtelVersion}")
+    implementation('org.springframework.cloud:spring-cloud-starter-sleuth') {
+        exclude group: 'org.springframework.cloud', module: 'spring-cloud-sleuth-brave'
+    }
+    implementation 'io.opentelemetry:opentelemetry-api'
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.postgresql:postgresql'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+    implementation 'org.slf4j:slf4j-api'
+    implementation 'ch.qos.logback:logback-classic'
+    implementation "io.micrometer:micrometer-registry-prometheus:${micrometerVersion}"
+
+    implementation "io.swagger.core.v3:swagger-annotations:${swaggerAnnotationsVersion}"
+    implementation "org.springdoc:springdoc-openapi-ui:${springdocVersion}"
+
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+
+    testImplementation "io.zonky.test:embedded-database-spring-test:${zonkyVersion}"
+    testImplementation "io.zonky.test:embedded-postgres:1.2.9"
+    testImplementation platform("io.zonky.test.postgres:embedded-postgres-binaries-bom:${embeddedPostgresVersion}")
+    testImplementation 'io.zonky.test.postgres:embedded-postgres-binaries-linux-amd64'
+}
+
+configurations {
+    compileOnly.extendsFrom annotationProcessor
+}
+
+test {
+    useJUnitPlatform()
+}
