@@ -9,7 +9,7 @@ spring:
   datasource:
     initialization-mode: always
     username: apiserver
-    password: ${password_from_pwfile}
+    password: apiserver
     url: jdbc:postgresql://localhost:5432/postgres
   sleuth:
     enabled: true
