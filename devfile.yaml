@@ -1,0 +1,62 @@
+schemaVersion: 2.1.0
+metadata:
+  name: spring-apiserver
+components:
+  - name: tools
+    container:
+      image: quay.io/devfile/universal-developer-image:ubi8-0e189d9
+      memoryLimit: 3Gi
+      endpoints:
+        - exposure: none
+          name: debug
+          protocol: tcp
+          targetPort: 5005
+        - exposure: public
+          name: 8080-tcp
+          protocol: http
+          targetPort: 8080
+      volumeMounts:
+        - name: m2
+          path: /home/user/.m2
+  - name: m2
+    volume:
+      size: 1G
+  - name: postgresdb
+    container:
+      image: quay.io/eclipse/che--centos--postgresql-13-centos7:1-71b24684d64da46f960682cc4216222a7e4ed8b1a31dd5a865b3e71afdea20d2
+      memoryLimit: 300Mi
+      endpoints:
+        - exposure: none
+          name: db
+          protocol: tcp
+          targetPort: 5432
+      env:
+        - name: POSTGRESQL_USER
+          value: apiserver
+        - name: POSTGRESQL_PASSWORD
+          value: apiserver
+        - name: POSTGRESQL_DATABASE
+          value: postgres
+      volumeMounts:
+        - name: pgsqldata
+          path: /var/lib/pgsql/data
+  - name: pgsqldata
+    volume:
+      size: 256Mi
+commands:
+  - id: gradle-build
+    exec:
+      component: tools
+      workingDir: ${PROJECT_SOURCE}
+      commandLine: ./gradlew clean build
+      group:
+        kind: build
+        isDefault: true
+  - id: gradle-run
+    exec:
+      component: tools
+      workingDir: ${PROJECT_SOURCE}
+      commandLine: ./gradlew bootRun
+      group:
+        kind: run
+        isDefault: true
