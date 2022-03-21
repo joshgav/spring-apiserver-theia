@@ -1,10 +1,22 @@
-#!/bin/bash -e
-#
-# S2I run script for the 's2i-gradle-java' image.
-# The run script executes the server that runs your application.
-#
-# For more information see the documentation:
-#	https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
-#
+#! /usr/bin/env bash
+
+if [[ -v PG_uri ]]; then
+    echo "INFO: Setting binding metadata from env vars"
+
+    export SPRING_APPLICATION_JSON="{
+        \"spring\": {
+            \"datasource\": {
+                \"username\": \"${PG_user}\",
+                \"password\": \"${PG_password}\",
+                \"url\": \"jdbc:postgresql://${PG_host}:${PG_port}/${PG_dbname}\"
+            }
+        },
+        \"keycloak\": {
+            \"credentials\": {
+                \"secret\": \"${KEYCLOAK_CLIENT_SECRET}\"
+            }
+        }
+    }"
+fi
 
 exec java $JAVA_PARAMS -jar ${HOME}/app.jar

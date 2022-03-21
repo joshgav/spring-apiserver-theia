@@ -10,7 +10,8 @@ spring:
     initialization-mode: always
     username: apiserver
     password: apiserver
-    url: jdbc:postgresql://postgresql:5432/apiserverdb
+    url: jdbc:postgresql://localhost:5432/apiserverdb
+    # url: jdbc:postgresql://localhost:5432/postgres
   sleuth:
     enabled: true
 
@@ -37,18 +38,17 @@ springdoc:
   packagesToScan: com.joshgav.apiserver.controller
 
 keycloak:
-  auth-server-url: TBD
-  realm: spring-test
-  resource: spring-test
-  ssl-required: external
+  auth-server-url: http://keycloak-insecure-app.apps.aws-ipi.sandbox930.opentlc.com/auth/
+  realm: app
+  resource: spring-apiserver
+  ssl-required: none
   principal-attribute: preferred_username
   credentials:
     secret: TBD
-
-  # security-constraints:
-  # - authRoles:
-  #   - spring
-  #   - user
-  #   securityCollections:
-  #   - patterns:
-  #     - '/*'
+# security-constraints:
+# - authRoles:
+#   - spring
+#   - user
+#   securityCollections:
+#   - patterns:
+#     - '/*'
