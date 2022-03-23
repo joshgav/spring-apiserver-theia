@@ -38,11 +38,11 @@ springdoc:
   packagesToScan: com.joshgav.apiserver.controller
 
 keycloak:
-  auth-server-url: http://keycloak-insecure-app.apps.aws-ipi.sandbox930.opentlc.com/auth/
-  realm: app
   resource: spring-apiserver
-  ssl-required: none
+  ssl-required: all
+  realm: app
   principal-attribute: preferred_username
+  auth-server-url: TBD
   credentials:
     secret: TBD
 # security-constraints:

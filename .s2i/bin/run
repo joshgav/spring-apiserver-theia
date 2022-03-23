@@ -12,6 +12,7 @@ if [[ -v PG_uri ]]; then
             }
         },
         \"keycloak\": {
+            ${KEYCLOAK_BASE_URL:+\"auth-server-url\": \"${KEYCLOAK_BASE_URL}\",}
             \"credentials\": {
                 \"secret\": \"${KEYCLOAK_CLIENT_SECRET}\"
             }
